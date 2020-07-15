@@ -5,12 +5,12 @@ const start = document.querySelector('.start');
 const stop = document.querySelector('.stop');
 const reset = document.querySelector('.reset');
 
-var startTime, sT, s, m, h;
+var startTime, sT, s, m, h, timeStamp = 0;
 
 function displayTime()
 {
         var spentTime;
-        spentTime = Date.now() - startTime;
+        spentTime = Date.now() - timeStamp ;
         console.log(spentTime);
         h = Math.floor(spentTime/3600000);
         m = Math.floor((spentTime%3600000)/60000);
@@ -24,7 +24,14 @@ start.addEventListener("click", () => {
     
     
      startTime = Date.now();
-     sT = setInterval(displayTime,1000);
+     sT = setInterval(() => 
+     {
+       if(!timeStamp)  
+       {
+          timeStamp = startTime; 
+       } 
+       displayTime();     
+     },1000);
      start.disabled = true;
 
 });
@@ -37,7 +44,7 @@ stop.addEventListener('click', () => {
 reset.addEventListener('click', () => {
    
     clearInterval(sT);
-    h=0, m=0, s=0;
+    h = 0, m = 0, s = 0, startTime = null;
     hr.textContent = '0' + h;
     min.textContent = '0' + m;
     sec.textContent = '0' + s;
