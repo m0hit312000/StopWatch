@@ -5,12 +5,11 @@ const start = document.querySelector('.start');
 const stop = document.querySelector('.stop');
 const reset = document.querySelector('.reset');
 
-var startTime, sT, s, m, h, timeStamp = 0;
+var startTime, sT, s, m, h, timeStamp = 0, spentTime = 0;;
 
 function displayTime()
 {
-        var spentTime;
-        spentTime = Date.now() - timeStamp ;
+        
         console.log(spentTime);
         h = Math.floor(spentTime/3600000);
         m = Math.floor((spentTime%3600000)/60000);
@@ -22,7 +21,7 @@ function displayTime()
 
 start.addEventListener("click", () => {
     
-    
+     if(!sT){
      startTime = Date.now();
      sT = setInterval(() => 
      {
@@ -30,24 +29,31 @@ start.addEventListener("click", () => {
        {
           timeStamp = startTime; 
        } 
+        spentTime += Date.now() - timeStamp;
+        timeStamp = Date.now();
        displayTime();     
      },1000);
      start.disabled = true;
-
+   }
 });
-stop.addEventListener('click', () => {
-  
-    clearInterval(sT);
-    start.disabled = false;
+function stopper()
+{
+    if(sT){
+        clearInterval(sT);
+        start.disabled = false;
+        sT = null; 
+     } 
+     timeStamp = null;
 
-});
+}
+stop.addEventListener('click',stopper);
+
 reset.addEventListener('click', () => {
    
     clearInterval(sT);
-    h = 0, m = 0, s = 0, startTime = null;
-    hr.textContent = '0' + h;
-    min.textContent = '0' + m;
-    sec.textContent = '0' + s;
+    stopper();
+    spentTime = 0;
+    displayTime();
     start.disabled = false;
 
 });
